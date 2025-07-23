@@ -1,236 +1,42 @@
-# C00lkill999 Menu
+C00lkill999 Menu — Мод-меню для Roblox (FE, без обхода)
+C00lkill999 Menu — мод-меню для Roblox, работающее в среде с включённым Filtering Enabled (FE). Все изменения и функции выполняются локально, без обхода защиты FE, поэтому эффекты видны только вам и не влияют на других игроков.
 
--- By C00lkill999
+Особенности
+🔹 Game
 
-local gui = Instance.new("ScreenGui", game.CoreGui)
-gui.Name = "Win10GUI"
+Unanchor All — отвязывает все объекты в Workspace локально (без влияния на сервер и других игроков)
 
-local frame = Instance.new("Frame", gui)
-frame.Size = UDim2.new(0, 500, 0, 450)
-frame.Position = UDim2.new(0.25, 0, 0.25, 0)
-frame.BackgroundColor3 = Color3.fromRGB(32, 32, 32)
-frame.BorderSizePixel = 0
-frame.Active = true
-frame.Draggable = true
-Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 6)
+Очистка Workspace — очищает локальный Workspace (изменения не распространяются на других)
 
-local titleBar = Instance.new("Frame", frame)
-titleBar.Size = UDim2.new(1, 0, 0, 35)
-titleBar.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+🔹 Music
 
-local titleText = Instance.new("TextLabel", titleBar)
-titleText.Size = UDim2.new(1, -40, 1, 0)
-titleText.Position = UDim2.new(0, 10, 0, 0)
-titleText.Text = "C00lkill999 - BackDoor FE GUI"
-titleText.TextColor3 = Color3.fromRGB(255, 255, 255)
-titleText.BackgroundTransparency = 1
-titleText.TextXAlignment = Enum.TextXAlignment.Left
-titleText.Font = Enum.Font.SourceSansSemibold
-titleText.TextSize = 20
+Управление локальной музыкой и звуками в игре
 
-local closeButton = Instance.new("TextButton", titleBar)
-closeButton.Size = UDim2.new(0, 35, 0, 35)
-closeButton.Position = UDim2.new(1, -35, 0, 0)
-closeButton.Text = "X"
-closeButton.Font = Enum.Font.SourceSansBold
-closeButton.TextSize = 24
-closeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-closeButton.BackgroundColor3 = Color3.fromRGB(232, 17, 35)
-closeButton.MouseButton1Click:Connect(function() gui:Destroy() end)
+🔹 Visual
 
--- Tabs
-local tabs = {"Game", "Music", "Visual", "Troll", "Executor"}
-local buttons, pages = {}, {}
+Локальная смена Skybox
 
-for i, tab in ipairs(tabs) do
-	local btn = Instance.new("TextButton", frame)
-	btn.Size = UDim2.new(0, 100, 0, 35)
-	btn.Position = UDim2.new(0, (i - 1) * 100, 0, 35)
-	btn.Text = tab
-	btn.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-	btn.TextColor3 = Color3.fromRGB(255, 255, 255)
-	btn.Font = Enum.Font.SourceSansBold
-	btn.TextSize = 18
-	buttons[tab] = btn
+Локальная замена всех текстур в мире
 
-	local page = Instance.new("Frame", frame)
-	page.Size = UDim2.new(1, 0, 1, -70)
-	page.Position = UDim2.new(0, 0, 0, 70)
-	page.BackgroundTransparency = 1
-	page.Visible = false
-	pages[tab] = page
-end
+🔹 Troll
 
-local function showPage(tabName)
-	for _, t in ipairs(tabs) do pages[t].Visible = (t == tabName) end
-end
-for tab, btn in pairs(buttons) do
-	btn.MouseButton1Click:Connect(function() showPage(tab) end)
-end
+Локальные эффекты для троллинга, видимые только вам
 
--- Buttons creator
-local function makeButton(text, parent, posY, callback)
-	local btn = Instance.new("TextButton", parent)
-	btn.Size = UDim2.new(0, 200, 0, 40)
-	btn.Position = UDim2.new(0, 20, 0, posY)
-	btn.BackgroundColor3 = Color3.fromRGB(0, 120, 215)
-	btn.TextColor3 = Color3.fromRGB(255, 255, 255)
-	btn.Font = Enum.Font.SourceSans
-	btn.TextSize = 18
-	btn.Text = text
-	btn.BorderSizePixel = 0
-	Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 4)
-	btn.MouseButton1Click:Connect(callback)
-end
+🔹 Executor
 
--- Game tab
-makeButton("Change all textures", pages["Game"], 10, function()
-	local texture = "rbxassetid://73203432523757"
-	local faces = {"Top", "Bottom", "Front", "Back", "Left", "Right"}
-	for _, part in pairs(workspace:GetDescendants()) do
-		if part:IsA("Part") then
-			for _, d in pairs(part:GetChildren()) do
-				if d:IsA("Decal") then d:Destroy() end
-			end
-			for _, face in ipairs(faces) do
-				local decal = Instance.new("Decal")
-				decal.Face = Enum.NormalId[face]
-				decal.Texture = texture
-				decal.Parent = part
-			end
-		end
-	end
-end)
+Встроенный Lua-Executor для запуска локальных скриптов
 
-makeButton("Change Skybox", pages["Game"], 60, function()
-	local Lighting = game:GetService("Lighting")
-	local sky = Instance.new("Sky", Lighting)
-	for _, v in pairs({"Bk", "Dn", "Ft", "Lf", "Rt", "Up"}) do
-		sky["Skybox"..v] = "rbxassetid://73203432523757"
-	end
-end)
+Вкладки меню
+Вкладка	Описание
+Game	Локальные игровые функции
+Music	Управление локальной музыкой и звуками
+Visual	Локальные визуальные изменения
+Troll	Локальный троллинг
+Executor	Запуск локальных Lua-скриптов
 
-makeButton("Clear all in Workspace", pages["Game"], 110, function()
-	for _, obj in pairs(workspace:GetChildren()) do
-		if obj:IsA("Model") or obj:IsA("Part") or obj:IsA("UnionOperation") then
-			obj:Destroy()
-		end
-	end
-end)
+Важное
+Меню не обходи и не изменяет серверные данные.
 
-makeButton("Unanchor All", pages["Game"], 160, function()
-	for _, obj in pairs(workspace:GetDescendants()) do
-		if obj:IsA("BasePart") then
-			obj.Anchored = false
-		end
-	end
-end)
+Другие игроки не видят изменения, сделанные через меню.
 
-makeButton("Flood the World (Water)", pages["Game"], 210, function()
-	local Terrain = workspace.Terrain
-	Terrain:FillBlock(CFrame.new(0, 150, 0), Vector3.new(5000, 300, 5000), Enum.Material.Water)
-end)
-
--- Music tab
-makeButton("Play Music 1", pages["Music"], 10, function()
-	local s = Instance.new("Sound", workspace)
-	s.SoundId = "rbxassetid://1847661821"
-	s.Volume = 5
-	s.Looped = true
-	s:Play()
-end)
-
-makeButton("Play Music 2", pages["Music"], 60, function()
-	local s = Instance.new("Sound", workspace)
-	s.SoundId = "rbxassetid://98364034458260"
-	s.Volume = 5
-	s.Looped = true
-	s:Play()
-end)
-
--- Visual tab
-makeButton("Enable Fly", pages["Visual"], 10, function()
-	loadstring(game:HttpGet("https://raw.githubusercontent.com/XNEOFF/FlyGuiV3/main/FlyGuiV3.txt"))()
-end)
-
-makeButton("Switch to R6", pages["Visual"], 60, function()
-	local player = game.Players.LocalPlayer
-	local char = player.Character
-	local humanoidDesc = Instance.new("HumanoidDescription")
-	humanoidDesc.RigType = Enum.HumanoidRigType.R6
-	if player and char and char:FindFirstChild("Humanoid") then
-		char.Humanoid:ApplyDescription(humanoidDesc)
-	end
-end)
-
-makeButton("Set Title on Head", pages["Visual"], 110, function()
-	local player = game.Players.LocalPlayer
-	local char = player.Character
-	if char and char:FindFirstChild("Head") then
-		local billboard = Instance.new("BillboardGui", char.Head)
-		billboard.Size = UDim2.new(0, 200, 0, 50)
-		billboard.StudsOffset = Vector3.new(0, 2, 0)
-		billboard.AlwaysOnTop = true
-		local label = Instance.new("TextLabel", billboard)
-		label.Size = UDim2.new(1, 0, 1, 0)
-		label.BackgroundTransparency = 1
-		label.TextColor3 = Color3.fromRGB(255, 255, 255)
-		label.Font = Enum.Font.SourceSansBold
-		label.TextSize = 18
-		label.Text = "C00lkill999 Join Today!"
-	end
-end)
-
--- Troll tab
-makeButton("Fling Script", pages["Troll"], 10, function()
-	loadstring(game:HttpGet('https://raw.githubusercontent.com/GhostPlayer352/Test4/main/Auto%20Fling%20Player'))()
-end)
-
-makeButton("Bang Script", pages["Troll"], 60, function()
-	loadstring(game:HttpGet('https://raw.githubusercontent.com/4gh9/Bang-Script-Gui/main/bang%20gui.lua'))()
-end)
-
-makeButton("Jerk Off Script", pages["Troll"], 110, function()
-	loadstring(game:HttpGet("https://pastefy.app/wa3v2Vgm/raw"))()
-end)
-
-makeButton("Infinite Yield", pages["Troll"], 160, function()
-	loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
-end)
-
--- Executor tab
-local executorPage = pages["Executor"]
-local textbox = Instance.new("TextBox", executorPage)
-textbox.Size = UDim2.new(0, 460, 0, 300)
-textbox.Position = UDim2.new(0, 20, 0, 10)
-textbox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-textbox.TextColor3 = Color3.fromRGB(255, 255, 255)
-textbox.Font = Enum.Font.SourceSans
-textbox.TextSize = 18
-textbox.ClearTextOnFocus = false
-textbox.MultiLine = true
-textbox.TextWrapped = true
-textbox.Text = "-- Paste your script here"
-
-local runButton = Instance.new("TextButton", executorPage)
-runButton.Size = UDim2.new(0, 200, 0, 40)
-runButton.Position = UDim2.new(0, 20, 0, 320)
-runButton.BackgroundColor3 = Color3.fromRGB(0, 120, 215)
-runButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-runButton.Font = Enum.Font.SourceSans
-runButton.TextSize = 18
-runButton.Text = "Run Script"
-runButton.BorderSizePixel = 0
-Instance.new("UICorner", runButton).CornerRadius = UDim.new(0, 4)
-
-runButton.MouseButton1Click:Connect(function()
-	local success, err = pcall(function()
-		loadstring(textbox.Text)()
-	end)
-	if not success then
-		warn("Script error:", err)
-	end
-end)
-
--- Show default page
-showPage("Game")
+Все эффекты локальны и влияют только на вашу клиентскую сессию.
